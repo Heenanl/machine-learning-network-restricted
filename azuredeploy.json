@@ -71,11 +71,19 @@
       "metadata": {
         "description": "Prefix for all resource names."
       }
+    },
+    "suffix": {
+      "type": "string",
+      "defaultValue": "[substring(uniqueString(resourceGroup().id), 0, 7)]",
+      "metadata": {
+        "description" : "Preferred suffix for resource names for unique names."
+      }
+
     }
   },
   "variables": {
     "name": "[toLower(format('{0}', parameters('amlName')))]",
-    "uniqueSuffix": "[substring(uniqueString(resourceGroup().id), 0, 7)]",
+    "uniqueSuffix": "[parameters('suffix')]",
     "vnetResourceId": "[format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Network/virtualNetworks/{2}', subscription().subscriptionId, parameters('vnetRgName'), parameters('vnetName'))]",
     "subnetResourceId": "[format('{0}/subnets/{1}', variables('vnetResourceId'), parameters('subnetName'))]"
   },
@@ -104,6 +112,9 @@
           },
           "prefix": {
             "value": "[parameters('prefix')]"
+          },
+          "suffix": {
+            "value": "[parameters('suffix')]"
           }
         },
         "template": {
@@ -119,10 +130,20 @@
           "parameters": {
             "prefix": {
               "type": "string",
+              "defaultValue": "[substring(uniqueString(resourceGroup().id), 0, 4)]",
               "minLength": 2,
               "maxLength": 10,
               "metadata": {
                 "description": "Prefix for all resource names."
+              }
+            },
+            "suffix": {
+              "type": "string",
+              "defaultValue": "[substring(uniqueString(resourceGroup().id), 0, 4)]",
+              "minLength": 2,
+              "maxLength": 4,
+              "metadata": {
+                "description": "Suffix for all resource names."
               }
             },
             "location": {
@@ -153,7 +174,7 @@
           },
           "variables": {
             "name": "[toLower(format('{0}', parameters('prefix')))]",
-            "uniqueSuffix": "[substring(uniqueString(resourceGroup().id), 0, 4)]"
+            "uniqueSuffix": "[parameters('suffix')]"
           },
           "resources": [
             {
