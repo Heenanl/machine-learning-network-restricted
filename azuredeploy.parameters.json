@@ -5,6 +5,9 @@
       "amlName": {
         "value": "GEN-UNIQUE-8"
       },
+      "suffix": {
+        "value": "GEN-UNIQUE-8"
+      },
       "amlFriendlyName": {
         "value": "Demo AI resource"
       },
