@@ -70,3 +70,8 @@ az deployment group create --resource-group privateAiHub --template-file main.bi
 If you are new to Azure AI Studio, see:
 
 - [Azure AI Studio](https://aka.ms/aistudio/docs)`Tags: `
+
+
+############ WIP
+
+- Make new or existing DNS flag as input 
