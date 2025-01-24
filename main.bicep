@@ -61,6 +61,7 @@ module aiDependencies 'modules/dependent-resources.bicep' = {
     subnetResourceId: subnetResourceId
     vnetResourceId: vnetResourceId
     prefix: prefix
+    dnsRgName : dnsRgName
   }
 }
 

@@ -16,11 +16,21 @@ param subnetResourceId string
 @description('Resource Id of the virtual network to deploy the resource into.')
 param vnetResourceId string
 
+@description('DNS RG name')
+param dnsRgName string
+
 // Variables
 var name = toLower('${prefix}')
 
 // Create a short, unique suffix, that will be unique to each resource group
 var uniqueSuffix = substring(uniqueString(resourceGroup().id), 0, 4)
+
+module dns 'dependent/dnszone.bicep' = {
+  name: 'dns-${name}-${uniqueSuffix}-retrieve'
+  params: {
+    dnsRgName: dnsRgName
+  }
+}
 
 module applicationInsights 'dependent/applicationinsights.bicep' = {
   name: 'appi-${name}-${uniqueSuffix}-deployment'
@@ -42,6 +52,7 @@ module keyvault 'dependent/keyvault.bicep' = {
     subnetId: subnetResourceId
     virtualNetworkId: vnetResourceId
     tags: tags
+    keyVaultPrivateDnsZoneId : dns.outputs.keyVaultPrivateDnsZoneId
   }
 }
 
