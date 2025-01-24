@@ -20,6 +20,9 @@
       "vnetName": {
         "value": "GET-PREREQ-vnetName"
       },
+      "dnsRgName": {
+        "value": "GET-PREREQ-dnsRGName"
+      },
       "vnetRgName": {
         "value": "GET-PREREQ-vnetResourceGroupName"
       },

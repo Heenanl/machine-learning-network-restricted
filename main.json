@@ -51,6 +51,12 @@
         "description": "Resource group name of the virtual network to deploy the resource into."
       }
     },
+    "dnsRgName": {
+      "type": "string",
+      "metadata": {
+        "description": "Resource group name of the virtual network to deploy the resource into."
+      }
+    },
     "subnetName": {
       "type": "string",
       "metadata": {
