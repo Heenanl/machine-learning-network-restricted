@@ -39,6 +39,16 @@ param vnetResourceId string
 @description('Subnet Id to deploy into.')
 param subnetResourceId string
 
+@description('Resource Group Name for Private DNS Zones.')
+param privateDnsZonesResourceGroup string
+
+@description(' Name of the Api DNS Zone where a VNet link should be configured')
+param privateDnsZoneName string
+
+@description('Name of the Notebooks DNS Zone where a VNet link should be configured')
+param privateAznbDnsZoneName string
+
+
 @description('Unique Suffix used for name generation')
 param uniqueSuffix string
 
@@ -46,6 +56,7 @@ var privateEndpointName = '${amlWorkspaceName}-amlWorkspace-PE'
 var targetSubResource = [
     'amlworkspace'
 ]
+
 
 resource amlWorkspace 'Microsoft.MachineLearningServices/workspaces@2023-10-01' = {
   name: amlWorkspaceName
@@ -115,18 +126,20 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2023-11-01' = {
 
 }
 
-resource privateLinkApi 'Microsoft.Network/privateDnsZones@2020-06-01' = {
-  name: 'privatelink.api.azureml.ms'
-  location: 'global'
-  tags: {}
-  properties: {}
+resource privateLinkApi 'Microsoft.Network/privateDnsZones@2020-06-01' existing = {
+  name: privateDnsZoneName
+  //scope: resourceGroup(privateDnsZonesResourceGroup)
+  // location: 'global'
+  // tags: {}
+  // properties: {}
 }
 
-resource privateLinkNotebooks 'Microsoft.Network/privateDnsZones@2020-06-01' = {
-  name: 'privatelink.notebooks.azure.net'
-  location: 'global'
-  tags: {}
-  properties: {}
+resource privateLinkNotebooks 'Microsoft.Network/privateDnsZones@2020-06-01' existing = {
+  name: privateAznbDnsZoneName
+  //scope: resourceGroup(privateDnsZonesResourceGroup)
+  // location: 'global'
+  // tags: {}
+  // properties: {}
 }
 
 resource vnetLinkApi 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2020-06-01' = {
@@ -164,11 +177,13 @@ resource dnsZoneGroupamlWorkspace 'Microsoft.Network/privateEndpoints/privateDns
         name: 'privatelink-api-azureml-ms'
         properties: {
             privateDnsZoneId: privateLinkApi.id
+           
         }
       }
       {
         name: 'privatelink-notebooks-azure-net'
         properties: {
+
             privateDnsZoneId: privateLinkNotebooks.id
         }
       }

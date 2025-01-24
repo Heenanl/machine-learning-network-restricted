@@ -24,6 +24,15 @@ param vnetRgName string
 @description('Name of the subnet to deploy into.')
 param subnetName string
 
+@description('Api Dns zone name for AML workspace')
+param apiDnsZoneName string = 'privatelink.api.azureml.ms'
+
+@description('Notebooks Dns zone name for AML workspace ')
+param azNbDnsZoneName string = 'privatelink.notebooks.azure.net'
+
+@description('Resource group name of the Dns zone.')
+param dnsRgName string
+
 @description('The location into which the resources should be deployed.')
 param location string = resourceGroup().location
 
@@ -40,6 +49,8 @@ var uniqueSuffix = substring(uniqueString(resourceGroup().id), 0, 7)
 
 var vnetResourceId = '/subscriptions/${subscription().subscriptionId}/resourceGroups/${vnetRgName}/providers/Microsoft.Network/virtualNetworks/${vnetName}'
 var subnetResourceId = '${vnetResourceId}/subnets/${subnetName}'
+//var privateDnsZoneId = '/subscriptions/${subscription().subscriptionId}/resourceGroups/${dnsRgName}/providers/Microsoft.Network/privateDnsZones/${apiDnsZoneName}'
+//var privateAznbDnsZoneId = '/subscriptions/${subscription().subscriptionId}/resourceGroups/${dnsRgName}/providers/Microsoft.Network/privateDnsZones/${azNbDnsZoneName}'
 
 // Dependent resources for the Azure Machine Learning workspace
 module aiDependencies 'modules/dependent-resources.bicep' = {
@@ -69,6 +80,9 @@ module amlWorkspace 'modules/aml-workspace.bicep' = {
     //network related
     vnetResourceId: vnetResourceId
     subnetResourceId: subnetResourceId
+    privateDnsZonesResourceGroup: dnsRgName
+    privateDnsZoneName: apiDnsZoneName
+    privateAznbDnsZoneName: azNbDnsZoneName
 
     // dependent resources
     aiServicesId: aiDependencies.outputs.aiservicesID

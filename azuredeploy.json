@@ -74,6 +74,8 @@
     },
     "suffix": {
       "type": "string",
+      "minLength": 2,
+      "maxLength": 7,
       "defaultValue": "[substring(uniqueString(resourceGroup().id), 0, 7)]",
       "metadata": {
         "description" : "Preferred suffix for resource names for unique names."
