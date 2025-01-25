@@ -69,11 +69,11 @@ resource keyVaultPrivateEndpoint 'Microsoft.Network/privateEndpoints@2023-11-01'
   }
 }
 
-// resource keyVaultPrivateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' existing = {
-//   name: privateDnsZoneName
-//   scope: resourceGroup('dns-test-vnet-rg')
-//   //location: 'global'
-// }
+resource keyVaultPrivateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' existing = {
+  name: privateDnsZoneName
+  scope: resourceGroup('dns-test-vnet-rg')
+  //location: 'global'
+}
 
 resource privateEndpointDns 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2023-11-01' = {
   parent: keyVaultPrivateEndpoint
@@ -83,7 +83,8 @@ resource privateEndpointDns 'Microsoft.Network/privateEndpoints/privateDnsZoneGr
       {
         name: privateDnsZoneName
         properties:{
-          privateDnsZoneId: keyVaultPrivateDnsZoneId
+        //  privateDnsZoneId: keyVaultPrivateDnsZoneId
+          privateDnsZoneId: keyVaultPrivateDnsZone.id
 
         }
       }
@@ -92,7 +93,7 @@ resource privateEndpointDns 'Microsoft.Network/privateEndpoints/privateDnsZoneGr
 }
 
 resource keyVaultPrivateDnsZoneVnetLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2020-06-01' = {
-  //parent: keyVaultPrivateDnsZone
+  parent: keyVaultPrivateDnsZone
   name: uniqueString(keyVault.id)
   location: 'global'
   properties: {
